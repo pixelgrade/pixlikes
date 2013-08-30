@@ -210,7 +210,6 @@ class PixLikes {
 	public function enqueue_scripts() {
 
 		$options = $this->get_settings();
-
 		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
 		$nonce = wp_create_nonce( 'pixlikes' );
 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'locals',
@@ -280,7 +279,7 @@ class PixLikes {
 		add_settings_section( 'pixlikes', '', array(&$this, 'add_settings_section_header'), 'pixlikes' );
 
 		add_settings_field( 'show_on', __( 'Where to show the like button ? ', $this->plugin_slug ), array(&$this, 'setting_show_on'), 'pixlikes', 'pixlikes' );
-		add_settings_field( 'load_likes_by_ajax', __( 'Reload likes number on page load', $this->plugin_slug ), array(&$this, 'setting_load_likes_with_ajax'), 'pixlikes', 'pixlikes' );
+		add_settings_field( 'load_likes_with_ajax', __( 'Reload likes number on page load', $this->plugin_slug ), array(&$this, 'setting_load_likes_with_ajax'), 'pixlikes', 'pixlikes' );
 	}
 
 	/**
@@ -296,7 +295,6 @@ class PixLikes {
 	/*
 	 * Now we need to create a callback for each setting
 	 */
-
 	public function setting_show_on() {
 		$options = get_option( 'pixlikes_settings' );
 		if( !isset($options['show_on_posts']) ) $options['show_on_posts'] = '0';
@@ -344,17 +342,17 @@ class PixLikes {
 			'</fieldset>';
 	}
 
-
 	public function setting_load_likes_with_ajax() {
 		$options = get_option( 'pixlikes_settings' );
-		if( !isset($options['load_likes_by_ajax']) ) $options['load_likes_by_ajax'] = '0';
+		if( !isset($options['load_likes_with_ajax']) ) $options['load_likes_with_ajax'] = '0';
 
 		echo '<div>';
 		echo '<fieldset>'.
-			'<input type="checkbox" name="pixlikes_settings[load_likes_by_ajax]" value="'. (($options['load_likes_by_ajax']) ? '1' : '0') .'"'. (($options['load_likes_by_ajax']) ? ' checked="checked"' : '') .'/>'.
-			'<label for="pixlikes_settings[load_likes_by_ajax]">This helps you to prevent the likes number to be cached </label>'.
+			'<input type="checkbox" name="pixlikes_settings[load_likes_with_ajax]" value="'. (($options['load_likes_with_ajax']) ? '1' : '0') .'"'. (($options['load_likes_with_ajax']) ? ' checked="checked"' : '') .'/>'.
+			'<label for="pixlikes_settings[load_likes_with_ajax]">This helps you to prevent the likes number to be cached </label>'.
 			'</fieldset></div>';
 	}
+
 		/**
 	 * Loading the likes box template.
 	 * The template loaded is found in views/pixlikes-template.php but it can be overridden in theme/child-theme by creating a file in templates/pixlikes-template.php
@@ -380,9 +378,9 @@ class PixLikes {
 		}
 
 		if ( empty($display_only) ) {
-			$data_id = 'data-id="'.get_the_ID().'"';
+			$display_only = 'canlike';
 		}
-
+		$data_id = 'data-id="'.get_the_ID().'"';
 		$likes_number = $this->get_likes_number(get_the_ID());
 
 		if ( empty($likes_number) ) {
@@ -430,22 +428,21 @@ class PixLikes {
 	 * @param    int    $post_id        Id of the post
 	 * @return   int    $likes_number   Number of likes
 	 */
-
 	public function ajax_callback(){
 
 		$result = array('success' => false, 'msg' => 'Nothing happend', 'likes_number' => 0 );
-		if ( !wp_verify_nonce( $_REQUEST['_ajax_nonce'], "pixlikes")) {
-			$result['msg'] = "No naughty business please";
-			echo json_encode($result);
-			exit();
-		}
+//		if ( !check_ajax_referer('pixlikes')) {
+//			$result['msg'] = "No naughty business please";
+//			echo json_encode($result);
+//			exit();
+//		}
 
 		$post_id = $_REQUEST['post_id'];
 		$likes_number = $this->get_likes_number($post_id);
 
 		if ( $_REQUEST['type'] == "get" ) {
 			$result['likes_number'] = $likes_number;
-			$result['msg'] = '';
+//			$result['msg'] = '';
 			$result['success'] = true;
 		} elseif ( $_REQUEST['type'] == "increment" ) {
 
@@ -456,9 +453,9 @@ class PixLikes {
 				echo json_encode($result);
 				exit();
 			}
-
 			$likes_number++;
-			update_post_meta($post_id, '_pixlikes', $likes_number);
+			$result['likes_number'] = $likes_number;
+			update_post_meta($post_id, '_pixlikes', $likes_number );
 			setcookie('pixlikes_'. $post_id, true, time()*20, '/');
 			$result['success'] = true;
 			$result['msg'] = "Thank you! We like you too";
@@ -513,11 +510,10 @@ class PixLikes {
 	public function get_likes_number($post_id){
 
 		$curent_likes = get_post_meta( $post_id, '_pixlikes', true );
-
 		if ( !empty($curent_likes) ) {
 			return $curent_likes;
 		} else {
-			return false;
+			return 0;
 		}
 	}
 }
