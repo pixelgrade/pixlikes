@@ -216,7 +216,8 @@ class PixLikes {
 			array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'ajax_nounce' => $nonce,
-				'load_likes_with_ajax' => $options['load_likes_with_ajax']
+				'load_likes_with_ajax' => $options['load_likes_with_ajax'],
+				'already_voted_msg' => __("You already voted!")
 			)
 		);
 	}
@@ -231,7 +232,7 @@ class PixLikes {
 			__( 'PixLikes', $this->plugin_slug ),
 			'update_core',
 			$this->plugin_slug,
-			array( $this, 'display_plugin_admin_page' )
+			array( $this, 'display_plugin_admin_page', wpGrade_txtd )
 		);
 
 	}
@@ -379,12 +380,19 @@ class PixLikes {
 
 		if ( empty($display_only) ) {
 			$display_only = 'canlike';
+		} else {
+			$display_only = '';
 		}
 		$data_id = 'data-id="'.get_the_ID().'"';
 		$likes_number = $this->get_likes_number(get_the_ID());
 
 		if ( empty($likes_number) ) {
 			$likes_number = 0;
+		}
+
+		$title = '';
+		if( isset( $_COOKIE['pixlikes_'. get_the_ID()]) && $display_only == 'canlike' ) {
+			$title = __('You already voted!', wpGrade_txtd);
 		}
 
 		ob_start();

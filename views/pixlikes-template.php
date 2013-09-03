@@ -9,4 +9,4 @@
  * Also $data_id variable contains the post id required by the js file
  */
 
-echo '<a class="pixlikes-box '.$display_only.'" href="#" '.$data_id.' style="background-color: #345; display:block; width:30px; height:30px">'. $likes_number .'</a>';
+echo '<a class="pixlikes-box '.$display_only.'" href="#" '.$data_id.' title="'. $title .'" style="background-color: #345; display:block; width:30px; height:30px">'. $likes_number .'</a>';
