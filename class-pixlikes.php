@@ -25,7 +25,7 @@ class PixLikes {
 	 * @const   string
 	 */
 	const VERSION = '1.0.0';
-
+	protected $version = '1.0.0';
 	/**
 	 * Unique identifier for your plugin.
 	 *
@@ -232,7 +232,7 @@ class PixLikes {
 			__( 'PixLikes', $this->plugin_slug ),
 			'update_core',
 			$this->plugin_slug,
-			array( $this, 'display_plugin_admin_page', wpGrade_txtd )
+			array( $this, 'display_plugin_admin_page' )
 		);
 
 	}
@@ -277,7 +277,7 @@ class PixLikes {
 
 		// register our settings under "pixlikes" group
 		register_setting( 'pixlikes', 'pixlikes_settings' );
-		add_settings_section( 'pixlikes', '', array(&$this, 'add_settings_section_header'), 'pixlikes' );
+//		add_settings_section( 'pixlikes', '', array(&$this, 'add_settings_section_header'), 'pixlikes' );
 
 		add_settings_field( 'show_on', __( 'Where to show the like button ? ', $this->plugin_slug ), array(&$this, 'setting_show_on'), 'pixlikes', 'pixlikes' );
 		add_settings_field( 'load_likes_with_ajax', __( 'Reload likes number on page load', $this->plugin_slug ), array(&$this, 'setting_load_likes_with_ajax'), 'pixlikes', 'pixlikes' );
@@ -300,7 +300,8 @@ class PixLikes {
 		$options = get_option( 'pixlikes_settings' );
 		if( !isset($options['show_on_posts']) ) $options['show_on_posts'] = '0';
 		if( !isset($options['show_on_pages']) ) $options['show_on_pages'] = '0';
-
+		if( !isset($options['show_on_home']) ) $options['show_on_home'] = '0';
+		if( !isset($options['show_on_archives']) ) $options['show_on_archives'] = '0';
 		// build in posts types
 		echo '<div><h3>'. __( 'Default Post Types', $this->plugin_slug ) .'</h3>';
 		echo '<fieldset>'.

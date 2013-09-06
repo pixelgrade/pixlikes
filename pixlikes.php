@@ -1,9 +1,5 @@
 <?php
 /**
- * The WordPress Plugin Boilerplate.
- *
- * A foundation off of which to build well-documented WordPress plugins that also follow
- * WordPress coding standards and PHP best practices.
  *
  * @package   PixLikes
  * @author    Pixelgrade <contact@pixelgrade.com>
