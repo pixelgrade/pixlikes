@@ -40,7 +40,7 @@ function pixlikes() {
 }
 
 
-function display_pixlikes() {
+function display_pixlikes( $class = '' ) {
 	global $pixlikes;
-	echo $pixlikes->display_likes_number();
+	echo $pixlikes->display_likes_number($class);
 }

@@ -277,7 +277,7 @@ class PixLikes {
 
 		// register our settings under "pixlikes" group
 		register_setting( 'pixlikes', 'pixlikes_settings' );
-//		add_settings_section( 'pixlikes', '', array(&$this, 'add_settings_section_header'), 'pixlikes' );
+		add_settings_section( 'pixlikes', '', array(&$this, 'add_settings_section_header'), 'pixlikes' );
 
 		add_settings_field( 'show_on', __( 'Where to show the like button ? ', $this->plugin_slug ), array(&$this, 'setting_show_on'), 'pixlikes', 'pixlikes' );
 		add_settings_field( 'load_likes_with_ajax', __( 'Reload likes number on page load', $this->plugin_slug ), array(&$this, 'setting_load_likes_with_ajax'), 'pixlikes', 'pixlikes' );
@@ -298,20 +298,20 @@ class PixLikes {
 	 */
 	public function setting_show_on() {
 		$options = get_option( 'pixlikes_settings' );
-		if( !isset($options['show_on_posts']) ) $options['show_on_posts'] = '0';
-		if( !isset($options['show_on_pages']) ) $options['show_on_pages'] = '0';
+		if( !isset($options['show_on_post']) ) $options['show_on_post'] = '0';
+		if( !isset($options['show_on_page']) ) $options['show_on_page'] = '0';
 		if( !isset($options['show_on_home']) ) $options['show_on_home'] = '0';
 		if( !isset($options['show_on_archives']) ) $options['show_on_archives'] = '0';
 		// build in posts types
 		echo '<div><h3>'. __( 'Default Post Types', $this->plugin_slug ) .'</h3>';
 		echo '<fieldset>'.
-				'<input type="checkbox" name="pixlikes_settings[show_on_posts]" value="'. (($options['show_on_posts']) ? '1' : '0') .'"'. (($options['show_on_posts']) ? ' checked="checked"' : '') .'/>'.
-				'<label for="pixlikes_settings[show_on_posts]">post</label>'.
+				'<input type="checkbox" name="pixlikes_settings[show_on_post]" value="'. (($options['show_on_post']) ? '1' : '0') .'"'. (($options['show_on_post']) ? ' checked="checked"' : '') .'/>'.
+				'<label for="pixlikes_settings[show_on_post]">post</label>'.
 			'</fieldset>';
 
 		echo '<fieldset>'.
-			'<input type="checkbox" name="pixlikes_settings[show_on_pages]" value="'. (($options['show_on_pages']) ? '1' : '0') .'"'. (($options['show_on_pages']) ? ' checked="checked"' : '') .'/>'.
-			'<label for="pixlikes_settings[show_on_pages]">page</label>'.
+			'<input type="checkbox" name="pixlikes_settings[show_on_page]" value="'. (($options['show_on_page']) ? '1' : '0') .'"'. (($options['show_on_page']) ? ' checked="checked"' : '') .'/>'.
+			'<label for="pixlikes_settings[show_on_page]">page</label>'.
 			'</fieldset>';
 		echo '</div><div><h3>'.__( 'Custom Post Types', $this->plugin_slug ) .'</h3>';
 		// custom post types
@@ -331,7 +331,7 @@ class PixLikes {
 				'</fieldset>';
 		}
 
-		echo '</div>';
+		echo '</div><div><h3>'.__( 'Other places', $this->plugin_slug ) .'</h3>';
 
 		echo '<fieldset>'.
 			'<input type="checkbox" name="pixlikes_settings[show_on_home]" value="'. (($options['show_on_home']) ? '1' : '0') .'"'. (($options['show_on_home']) ? ' checked="checked"' : '') .'/>'.
@@ -355,14 +355,14 @@ class PixLikes {
 			'</fieldset></div>';
 	}
 
-		/**
+	/**
 	 * Loading the likes box template.
 	 * The template loaded is found in views/pixlikes-template.php but it can be overridden in theme/child-theme by creating a file in templates/pixlikes-template.php
 	 *
 	 * @param    array    $_vars    Array with arguments like "display_only" which if is set true users can not vote on that box.
 	 * @return   string   Return the template
 	 */
-	public function loadTemplate( $_vars = array( 'display_only' => '' )){
+	public function loadTemplate( $_vars = array( 'display_only' => '' ) ){
 
 		$_name = 'pixlikes-template';
 		$_located = locate_template("templates/{$_name}.php", false, false);
@@ -372,11 +372,10 @@ class PixLikes {
 			$_located = dirname(__FILE__).'/views/'.$_name.'.php';
 		}
 		unset($_name);
-
+		$class = '';
 		// create variables
 		if( !empty($_vars)) {
 			extract($_vars);
-
 		}
 
 		if ( empty($display_only) ) {
@@ -396,8 +395,8 @@ class PixLikes {
 			$title = __('You already voted!', wpGrade_txtd);
 		}
 
-		ob_start();
 		// load it
+		ob_start();
 		require $_located;
 		return ob_get_clean();
 	}
@@ -410,14 +409,13 @@ class PixLikes {
 	 */
 	public function add_like_box_after_content( $content ){
 		$options = $this->get_settings();
-
 		// homepages
 		if ( ( is_front_page() || is_home() ) && $options['show_on_home'] == '1' ) return $content . $this->loadTemplate(array( 'display_only' => true ));
 		// archives
 		if ( ( is_archive() || is_search() ) && $options['show_on_archives'] == '1') return $content . $this->loadTemplate(array( 'display_only' => true ));
 		// singulars
-		if( is_singular('post') && $options['show_on_posts'] == '1' ) return $content . $this->loadTemplate();
-		if( is_page() && !is_front_page() && $options['show_on_pages'] == '1' ) return $content . $this->loadTemplate();
+		if( is_singular('post') && $options['show_on_post'] == '1' ) return $content . $this->loadTemplate();
+		if( is_page() && !is_front_page() && $options['show_on_page'] == '1' ) return $content . $this->loadTemplate();
 		// custom post types
 		$post_type = get_post_type();
 		if ( 'post' !== $post_type || 'page' !== $post_type ) {
@@ -481,8 +479,8 @@ class PixLikes {
 	public function get_settings(){
 
 		$options = get_option( 'pixlikes_settings' );
-		if( !isset($options['show_on_posts']) ) $options['show_on_posts'] = '0';
-		if( !isset($options['show_on_pages']) ) $options['show_on_pages'] = '0';
+		if( !isset($options['show_on_post']) ) $options['show_on_post'] = '0';
+		if( !isset($options['show_on_page']) ) $options['show_on_page'] = '0';
 		if( !isset($options['show_on_home']) ) $options['show_on_home'] = '0';
 		if( !isset($options['show_on_archives']) ) $options['show_on_archives'] = '0';
 		if( !isset($options['load_likes_with_ajax']) ) $options['load_likes_with_ajax'] = '0';
@@ -507,8 +505,8 @@ class PixLikes {
 		echo $this->loadTemplate();
 	}
 
-	public function display_likes_number() {
-		echo $this->loadTemplate( array( 'display_only' => true ) );
+	public function display_likes_number( $class = '') {
+		echo $this->loadTemplate( array( 'display_only' => true, 'class' => $class ) );
 	}
 
 	/*
