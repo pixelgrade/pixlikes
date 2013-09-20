@@ -379,7 +379,7 @@ class PixLikes {
 		}
 
 		if ( empty($display_only) ) {
-			$display_only = 'canlike';
+			$display_only = 'can_like';
 		} else {
 			$display_only = '';
 		}
@@ -391,7 +391,7 @@ class PixLikes {
 		}
 
 		$title = '';
-		if( isset( $_COOKIE['pixlikes_'. get_the_ID()]) && $display_only == 'canlike' ) {
+		if( isset( $_COOKIE['pixlikes_'. get_the_ID()]) && $display_only == 'can_like' ) {
 			$title = __('You already voted!', wpGrade_txtd);
 		}
 
@@ -501,12 +501,12 @@ class PixLikes {
 	/*
 	 * Display the like box unconditionally
 	 */
-	public function display_pixlikes() {
-		echo $this->loadTemplate();
-	}
+//	public function display_pixlikes( $args = array('display_only' => false, 'class' => '' ) ) {
+//		echo $this->loadTemplate($args);
+//	}
 
-	public function display_likes_number( $class = '') {
-		echo $this->loadTemplate( array( 'display_only' => true, 'class' => $class ) );
+	public function display_likes_number( $args ) {
+		echo $this->loadTemplate( $args );
 	}
 
 	/*

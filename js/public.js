@@ -30,7 +30,7 @@
 		/**
 		 * On each click check if the user can like
 		 */
-		$('.pixlikes-box').on('click', '.icon-heart', function(e){
+		$('.pixlikes-box.can_like').one('click', '.icon-heart', function(e){
 
 			e.preventDefault();
 			var likebox = $(this).parent('.pixlikes-box'),
