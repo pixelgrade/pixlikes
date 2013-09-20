@@ -392,7 +392,7 @@ class PixLikes {
 
 		$title = '';
 		if( isset( $_COOKIE['pixlikes_'. get_the_ID()]) && $display_only == 'can_like' ) {
-			$title = __('You already voted!', wpGrade_txtd);
+			$title = __('You already voted!', 'wpGrade_txtd');
 		}
 
 		// load it
