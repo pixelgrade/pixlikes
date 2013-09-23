@@ -378,7 +378,7 @@ class PixLikes {
 			extract($_vars);
 		}
 
-		if ( empty($display_only) ) {
+		if ( empty( $display_only) && !isset( $_COOKIE['pixlikes_'. get_the_ID()] ) ) {
 			$display_only = 'can_like';
 		} else {
 			$display_only = '';
