@@ -30,9 +30,10 @@
 		/**
 		 * On each click check if the user can like
 		 */
-		$('.pixlikes-box.can_like').one('click', '.icon-heart', function(e){
+		$('.pixlikes-box.can_like').one('click', '.like-link', function(e){
 
 			e.preventDefault();
+
 			var likebox = $(this).parent('.pixlikes-box'),
 				post_id = $(likebox).data('id');
 			// if there is no post to like or the user already voted we should return

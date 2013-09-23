@@ -11,7 +11,7 @@
 
 //echo '<a class="pixlikes-box '.$display_only.'" href="#" '.$data_id.' title="'. $title .'" style="background-color: #345; display:block; width:30px; height:30px">'. $likes_number .'</a>';?>
 <div class="pixlikes-box <?php echo $display_only . ' ' . $class ?> likes-box" <?php echo $data_id ?>>
-	<i class="icon-heart"></i>
+	<a class="like-link"><i class="icon-heart"></i></a>
 	<div class="likes-text">
 		<span class="likes-count"><?php echo $likes_number ?></span> likes
 	</div>
