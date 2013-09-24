@@ -12,17 +12,59 @@
  * @copyright 2013 Pixelgrade Media
  */
 
-?>
-<div class="wrap">
-	<?php screen_icon(); ?>
-	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
+$config = include pixtypes::pluginpath().'plugin-config'.EXT;
 
-	<form action="options-general.php?page=pixlikes" method="post" id="pixlikes_form">
-		<?php
-		settings_fields('pixlikes');
-		do_settings_sections( 'pixlikes' );
-		?>
-		<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save Changes', $this->plugin_slug ); ?>" /></p>
-	</form>
+// invoke processor
+$processor = pixtypes::processor($config);
+$status = $processor->status();
+$errors = $processor->errors();
+?>
+
+
+<div class="wrap" id="pixtypes_form">
+
+	<div id="icon-options-general" class="icon32"><br></div>
+
+	<h2>Pixtypes</h2>
+
+	<?php if ($processor->ok()): ?>
+
+		<?php if ( ! empty($errors)): ?>
+			<br/>
+			<p class="update-nag">
+				<strong>Unable to save settings.</strong>
+				Please check the fields for errors and typos.
+			</p>
+		<?php endif; ?>
+
+		<?php if ($processor->performed_update()): ?>
+			<br/>
+			<p class="update-nag">
+				Settings have been updated.
+			</p>
+		<?php endif; ?>
+
+		<?php echo $f = pixtypes::form($config, $processor);
+		echo $f->field('hiddens')->render(); ?>
+		<h3>Post Types</h3>
+
+		<?php echo $f->field('post_types')->render() ?>
+
+		<h3>Taxonomies</h3>
+
+		<?php echo $f->field('taxonomies')->render() ?>
+
+		<button type="submit" class="button button-primary">
+			Save Changes
+		</button>
+
+		<?php echo $f->endform() ?>
+
+	<?php elseif ($status['state'] == 'error'): ?>
+
+		<h3>Critical Error</h3>
+
+		<p><?php echo $status['message'] ?></p>
+
+	<?php endif; ?>
 </div>
-<?php

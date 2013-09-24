@@ -15,7 +15,7 @@
  * @package PixLikes
  * @author    Pixelgrade <contact@pixelgrade.com>
  */
-class PixLikes {
+class PixLikesPlugin {
 
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.

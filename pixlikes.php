@@ -25,22 +25,57 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+// ensure EXT is defined
+if ( ! defined('EXT')) {
+	define('EXT', '.php');
+}
+
+require 'core/bootstrap'.EXT;
+
+$config = include 'plugin-config'.EXT;
+require_once( plugin_dir_path( __FILE__ ) . 'class-pixlikes.php' );
+// set textdomain
+pixlikes::settextdomain($config['textdomain']);
+
+// Ensure Test Data
+// ----------------
+
+$defaults = include 'plugin-defaults'.EXT;
+
+$current_data = get_option($config['settings-key']);
+
+if ($current_data === false) {
+	add_option($config['settings-key'], $defaults);
+}
+else if (count(array_diff_key($defaults, $current_data)) != 0) {
+	$plugindata = array_merge($defaults, $current_data);
+	update_option($config['settings-key'], $plugindata);
+}
+# else: data is available; do nothing
+
+// Load Callbacks
+// --------------
+
+$basepath = dirname(__FILE__).DIRECTORY_SEPARATOR;
+$callbackpath = $basepath.'callbacks'.DIRECTORY_SEPARATOR;
+pixlikes::require_all($callbackpath);
+
 require_once( plugin_dir_path( __FILE__ ) . 'class-pixlikes.php' );
 
 // Register hooks that are fired when the plugin is activated, deactivated, and uninstalled, respectively.
-//register_activation_hook( __FILE__, array( 'PixLikes', 'activate' ) );
-//register_deactivation_hook( __FILE__, array( 'PixLikes', 'deactivate' ) );
+register_activation_hook( __FILE__, array( 'PixLikesPlugin', 'activate' ) );
+//register_deactivation_hook( __FILE__, array( 'PixLikesPlugin', 'deactivate' ) );
 
-global $pixlikes;
-$pixlikes = PixLikes::get_instance();
+global $pixlikes_plugin;
+$pixlikes_plugin = PixLikesPlugin::get_instance();
 
 function pixlikes() {
-	global $pixlikes;
-	echo $pixlikes->display_pixlikes();
+	global $pixlikes_plugin;
+	echo $pixlikes_plugin->display_pixlikes();
 }
 
 
 function display_pixlikes( $args = array('display_only' => false, 'class' => '' ) ) {
-	global $pixlikes;
-	echo $pixlikes->display_likes_number($args);
+	global $pixlikes_plugin;
+	echo $pixlikes_plugin->display_likes_number($args);
 }
