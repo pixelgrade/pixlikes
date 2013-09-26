@@ -32,7 +32,7 @@
 			/**
 			 * On each click check if the user can like
 			 */
-			$(document).on('click', '.pixlikes-box.can_like .like-link', function(e){
+			$(document).on('click', '.pixlikes-box.likeable .like-link', function(e){
 
 				e.preventDefault();
 				var likebox = $(this).parent('.pixlikes-box');
@@ -43,27 +43,33 @@
 
 			var delay_timer;
 
-			$(document).on('mouseenter', '.pixlikes-box.can_like .like-link', function(){
+			$(document).on('mouseenter', '.pixlikes-box.likeable .like-link', function(){
 				var likebox = $(this).parent('.pixlikes-box');
 
 				var $iElem = $(likebox).find('i');
-                $iElem.addClass('animate-like').delay(1000).queue(function(){$(this).addClass('like-complete');});
+        likebox.
+        	addClass('animate')
+        	.delay(1000)
+        	.queue(function(){ 
+        		// $(this).removeClass('animate');
+
+        	} );
 
 				delay_timer = setTimeout(function() {
 						like_this( likebox );
+						// likebox.addClass('complete');
 				}, locals.hover_time);
 
-			}).on('mouseleave', '.pixlikes-box.can_like .like-link', function(){
+			}).on('mouseleave', '.pixlikes-box.likeable .like-link', function(){
 
 				clearTimeout(delay_timer);
 
 				var likebox = $(this).parent('.pixlikes-box');
 				var $iElem = $(likebox).find('i');
-				$iElem
+				likebox
 					.stop()
 					.clearQueue()
-					.removeClass('animate-like')
-					.removeClass('like-complete');
+					.removeClass('animate')
 			});
 		}
 
@@ -72,7 +78,7 @@
 
 			var post_id = $(likebox).data('id');
 
-			$(likebox).removeClass('can_like');
+			$(likebox).addClass('complete').removeClass('likeable animate');
 
 			// if there is no post to like or the user already voted we should return
 			if ( typeof post_id === 'undefined' || getCookie("pixlikes_"+post_id) ) return;

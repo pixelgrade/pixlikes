@@ -9,7 +9,7 @@
 	'show_on_post' => false,
 	'show_on_page' => false,
 	'like_action' => 'hover',
-	'hover_time' => 1500,
+	'hover_time' => 1000,
 //		'portfolio_single_item_label' => 'Proiect',
 //		'portfolio_multiple_items_label' => 'Proiects',
 //

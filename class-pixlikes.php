@@ -381,9 +381,9 @@ class PixLikesPlugin {
 		}
 
 		if ( empty( $display_only) && !isset( $_COOKIE['pixlikes_'. get_the_ID()] ) ) {
-			$display_only = 'can_like';
+			$display_only = 'likeable';
 		} else {
-			$display_only = '';
+			$display_only = 'liked';
 		}
 		$data_id = 'data-id="'.get_the_ID().'"';
 		$likes_number = $this->get_likes_number(get_the_ID());
@@ -393,7 +393,7 @@ class PixLikesPlugin {
 		}
 
 		$title = '';
-		if( isset( $_COOKIE['pixlikes_'. get_the_ID()]) && $display_only == 'can_like' ) {
+		if( isset( $_COOKIE['pixlikes_'. get_the_ID()]) && $display_only == 'likeable' ) {
 			$title = __('You already voted!', 'wpGrade_txtd');
 		}
 
