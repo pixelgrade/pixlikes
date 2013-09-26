@@ -217,7 +217,9 @@ class PixLikesPlugin {
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'ajax_nounce' => $nonce,
 				'load_likes_with_ajax' => $options['load_likes_with_ajax'],
-				'already_voted_msg' => __("You already voted!")
+				'already_voted_msg' => __("You already voted!"),
+				'like_on_action' => $options['like_action'],
+				'hover_time' => $options['hover_time']
 			)
 		);
 	}
