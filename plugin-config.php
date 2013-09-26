@@ -18,16 +18,17 @@ return array
 
 		'fields' => array
 			(
-//				'hiddens'
-//					=> include 'settings/hiddens'.EXT,
-				'pixlikes'
-					=> include 'settings/pixlikes'.EXT,
+				'general'
+					=> include 'settings/general'.EXT,
+				'show_on'
+					=> include 'settings/show_on'.EXT,
+				'cache'
+					=> include 'settings/cache'.EXT,
 			),
 
 		'processor' => array
 			(
 				// callback signature: (array $input, PixlikesProcessor $processor)
-
 				'preupdate' => array
 				(
 					// callbacks to run before update process

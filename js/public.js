@@ -3,7 +3,7 @@
 	$(function () {
 
 		/**
-		 * If prevent caching is on, we update all likes number on page load
+		 * If prevent caching is on we update all likes number on page load
 		 */
 		$(document).ready(function(){
 			if ( locals.load_likes_with_ajax == true ) {
@@ -27,15 +27,53 @@
 			}
 		});
 
-		/**
-		 * On each click check if the user can like
-		 */
-		$(document).on('click', '.pixlikes-box.can_like .like-link', function(e){
+		if ( locals.like_on_action == 'click' ) {
 
-			e.preventDefault();
+			/**
+			 * On each click check if the user can like
+			 */
+			$(document).on('click', '.pixlikes-box.can_like .like-link', function(e){
 
-			var likebox = $(this).parent('.pixlikes-box'),
-				post_id = $(likebox).data('id');
+				e.preventDefault();
+				var likebox = $(this).parent('.pixlikes-box');
+				like_this( likebox );
+			});
+
+		} else if ( locals.like_on_action == 'hover' ) {
+
+			var delay_timer;
+
+			$(document).on('mouseenter', '.pixlikes-box.can_like .like-link', function(){
+				var likebox = $(this).parent('.pixlikes-box');
+
+				var $iElem = $(likebox).find('i');
+                $iElem.addClass('animate-like').delay(1000).queue(function(){$(this).addClass('like-complete');});
+
+				delay_timer = setTimeout(function() {
+						like_this( likebox );
+				}, locals.hover_time);
+
+			}).on('mouseleave', '.pixlikes-box.can_like .like-link', function(){
+
+				clearTimeout(delay_timer);
+
+				var likebox = $(this).parent('.pixlikes-box');
+				var $iElem = $(likebox).find('i');
+				$iElem
+					.stop()
+					.clearQueue()
+					.removeClass('animate-like')
+					.removeClass('like-complete');
+			});
+		}
+
+
+		var like_this = function( likebox ){
+
+			var post_id = $(likebox).data('id');
+
+			$(likebox).removeClass('can_like');
+
 			// if there is no post to like or the user already voted we should return
 			if ( typeof post_id === 'undefined' || getCookie("pixlikes_"+post_id) ) return;
 
@@ -51,7 +89,8 @@
 					}
 				}
 			});
-		});
+
+		};
 
 		/**
 		 * Utility functions

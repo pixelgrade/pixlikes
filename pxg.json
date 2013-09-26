@@ -1,9 +1,11 @@
 {
+	"interface": "1.1.0",
+
 	"wp-cores": [
 		{
 			"repo": "https://github.com/pixelgrade/pixcore.git",
 			"path": "core",
-			"version": "1.2.2",
+			"version": "1.2.3",
 			"namespace": {
 				"src": "pixcore",
 				"target": "pixlikes"

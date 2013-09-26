@@ -74,7 +74,7 @@ class PixLikesPlugin {
 		 add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
 
 		// Load admin style sheet and JavaScript.
-//		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Load public-facing style sheet and JavaScript.
@@ -217,7 +217,9 @@ class PixLikesPlugin {
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'ajax_nounce' => $nonce,
 				'load_likes_with_ajax' => $options['load_likes_with_ajax'],
-				'already_voted_msg' => __("You already voted!")
+				'already_voted_msg' => __("You already voted!"),
+				'like_on_action' => $options['like_action'],
+				'hover_time' => $options['hover_time']
 			)
 		);
 	}

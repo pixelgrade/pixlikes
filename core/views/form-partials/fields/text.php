@@ -1,12 +1,12 @@
 <?php defined('ABSPATH') or die;
-	/* @var $field     PixlikesFormField */
-	/* @var $form      PixlikesForm  */
-	/* @var $default   mixed */
-	/* @var $name      string */
-	/* @var $idname    string */
-	/* @var $label     string */
-	/* @var $desc      string */
-	/* @var $rendering string  */
+	/* @var PixtypesFormField $field */
+	/* @var PixtypesForm $form */
+	/* @var mixed $default */
+	/* @var string $name */
+	/* @var string $idname */
+	/* @var string $label */
+	/* @var string $desc */
+	/* @var string $rendering */
 
 	isset($type) or $type = 'text';
 
@@ -21,6 +21,12 @@
 
 <?php if ($rendering == 'inline'): ?>
 	<input <?php echo $field->htmlattributes($attrs) ?>/>
+<?php elseif ($rendering == 'blocks'):  ?>
+<div class="text">
+	<label id="<?php echo $name ?>"><?php echo $label ?></label>
+	<input <?php echo $field->htmlattributes($attrs) ?> />
+	<span><?php echo $desc ?></span>
+</div>
 <?php else: # ?>
 	<div>
 		<p><?php echo $desc ?></p>

@@ -12,20 +12,18 @@
  * @copyright 2013 Pixelgrade Media
  */
 
-$config = include pixtypes::pluginpath().'plugin-config'.EXT;
+$config = include pixlikes::pluginpath().'plugin-config'.EXT;
 
 // invoke processor
-$processor = pixtypes::processor($config);
+$processor = pixlikes::processor($config);
 $status = $processor->status();
-$errors = $processor->errors();
-?>
+$errors = $processor->errors(); ?>
 
-
-<div class="wrap" id="pixtypes_form">
+<div class="wrap" id="pixlikes_form">
 
 	<div id="icon-options-general" class="icon32"><br></div>
 
-	<h2>Pixtypes</h2>
+	<h2>Pixlikes</h2>
 
 	<?php if ($processor->ok()): ?>
 
@@ -44,15 +42,13 @@ $errors = $processor->errors();
 			</p>
 		<?php endif; ?>
 
-		<?php echo $f = pixtypes::form($config, $processor);
-		echo $f->field('hiddens')->render(); ?>
-		<h3>Post Types</h3>
+		<?php echo $f = pixlikes::form($config, $processor); ?>
 
-		<?php echo $f->field('post_types')->render() ?>
+		<?php echo $f->field('general')->render() ?>
 
-		<h3>Taxonomies</h3>
+		<?php echo $f->field('show_on')->render() ?>
 
-		<?php echo $f->field('taxonomies')->render() ?>
+		<?php echo $f->field('cache')->render() ?>
 
 		<button type="submit" class="button button-primary">
 			Save Changes

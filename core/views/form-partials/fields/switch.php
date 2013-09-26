@@ -1,12 +1,12 @@
 <?php defined('ABSPATH') or die;
-	/* @var $field     PixlikesFormField */
-	/* @var $form      PixlikesForm  */
-	/* @var $default   mixed */
-	/* @var $name      string */
-	/* @var $idname    string */
-	/* @var $label     string */
-	/* @var $desc      string */
-	/* @var $rendering string  */
+	/* @var PixtypesFormField $field */
+	/* @var PixtypesForm $form */
+	/* @var mixed $default */
+	/* @var string $name */
+	/* @var string $idname */
+	/* @var string $label */
+	/* @var string $desc */
+	/* @var string $rendering */
 
 	// [!!] a switch is a checkbox that is only ever either on or off; not to
 	// be confused with a fully functional checkbox which may be many values
@@ -41,10 +41,21 @@
 		$processed_label = $label;
 	}
 
+	// group show
+
+	if ($field->hasmeta('show_group')) {
+		$attrs['data-show_group'] =  $field->getmeta('show_group');
+	}
 ?>
 
 <?php if ($rendering == 'inline'): ?>
 	<input <?php echo $field->htmlattributes($attrs) ?> />
+
+<?php elseif ($rendering == 'blocks'):  ?>
+	<div class="switch">
+		<input <?php echo $field->htmlattributes($attrs) ?> />
+		<label for="<?php echo $idname ?>"><?php echo $processed_label ?></label>
+	</div>
 <?php else: # rendering != 'inline' ?>
 	<label for="<?php echo $idname ?>">
 		<input <?php echo $field->htmlattributes($attrs) ?> />

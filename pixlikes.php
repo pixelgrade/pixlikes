@@ -79,3 +79,11 @@ function display_pixlikes( $args = array('display_only' => false, 'class' => '' 
 	global $pixlikes_plugin;
 	echo $pixlikes_plugin->display_likes_number($args);
 }
+
+/**
+ * <style>
+ * .animate-like {
+ *	animation: like-animation 1s;
+ *  -webkit-animation: like-animation 1s; }
+ *</style>
+ */
