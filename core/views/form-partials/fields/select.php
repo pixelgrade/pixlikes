@@ -19,14 +19,12 @@
 			'id' => $idname,
 		);
 ?>
-<div class="select">
-	<label><?php echo $label; ?></label>
-	<select <?php echo $field->htmlattributes() ?>>
-		<?php foreach ($this->getmeta('options', array()) as $key => $label): ?>
-			<option <?php if ($key == $selected): ?>selected<?php endif; ?>
-					value="<?php echo $key ?>">
-				<?php echo $label ?>
-			</option>
-		<?php endforeach; ?>
-	</select>
-</div>
+
+<select <?php echo $field->htmlattributes() ?>>
+	<?php foreach ($this->getmeta('options', array()) as $key => $label): ?>
+		<option <?php if ($key == $selected): ?>selected<?php endif; ?>
+				value="<?php echo $key ?>">
+			<?php echo $label ?>
+		</option>
+	<?php endforeach; ?>
+</select>
