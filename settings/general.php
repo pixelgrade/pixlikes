@@ -24,5 +24,11 @@
 						'default' => 1500,
 						'type' => 'text',
 					),
+
+				'free_votes' => array(
+					'label' => 'Remove the limit of 1 like per post',
+					'default' => false,
+					'type' => 'switch'
+				),
 			)
 	); # config

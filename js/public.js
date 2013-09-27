@@ -32,10 +32,11 @@
 			/**
 			 * On each click check if the user can like
 			 */
-			$(document).on('click', '.pixlikes-box.can_like .like-link', function(e){
+			$(document).on('click', '.pixlikes-box.likeable .like-link', function(e){
 
 				e.preventDefault();
 				var likebox = $(this).parent('.pixlikes-box');
+				likebox.addClass('animate');
 				like_this( likebox );
 			});
 
@@ -43,44 +44,38 @@
 
 			var delay_timer;
 
-			$(document).on('mouseenter', '.pixlikes-box.can_like .like-link', function(){
+			$(document).on('mouseenter', '.pixlikes-box.likeable .like-link', function(){
 				var likebox = $(this).parent('.pixlikes-box');
 
 				var $iElem = $(likebox).find('i');
-                $iElem.addClass('animate-like').delay(1000).queue(function(){$(this).addClass('like-complete');});
+				likebox.addClass('animate');
 
 				delay_timer = setTimeout(function() {
-						like_this( likebox );
+					like_this( likebox );
 				}, locals.hover_time);
 
-			}).on('mouseleave', '.pixlikes-box.can_like .like-link', function(){
+			}).on('mouseleave', '.pixlikes-box.likeable .like-link', function(){
 
-				clearTimeout(delay_timer);
+					clearTimeout(delay_timer);
 
-				var likebox = $(this).parent('.pixlikes-box');
-				var $iElem = $(likebox).find('i');
-				$iElem
-					.stop()
-					.clearQueue()
-					.removeClass('animate-like')
-					.removeClass('like-complete');
-			});
+					var likebox = $(this).parent('.pixlikes-box');
+					var $iElem = $(likebox).find('i');
+					likebox.removeClass('animate')
+				});
 		}
 
 
 		var like_this = function( likebox ){
 
 			var post_id = $(likebox).data('id');
-
-			$(likebox).removeClass('can_like');
-
 			// if there is no post to like or the user already voted we should return
-			if ( typeof post_id === 'undefined' || getCookie("pixlikes_"+post_id) ) return;
+			if ( typeof post_id === 'undefined' || ( !locals.free_votes && getCookie("pixlikes_"+post_id) ) ) return;
+			$(likebox).addClass('complete').removeClass('likeable animate');
 
 			jQuery.ajax({
 				type: "post",url: locals.ajax_url,data: { action: 'pixlikes', _ajax_nonce: locals.ajax_nounce, type: 'increment', post_id: post_id},
 				//beforeSend: function() {jQuery("#loading").show("slow");}, //show loading just when link is clicked
-				//complete: function() { jQuery("#loading").hide("fast");}, //stop showing loading when the process is complete
+//				complete: function() {}, //stop showing loading when the process is complete
 				success: function( response ){ //so, if data is retrieved, store it in result
 					var result = JSON.parse(response);
 					if ( result.success ) {

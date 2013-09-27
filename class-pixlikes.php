@@ -57,11 +57,23 @@ class PixLikesPlugin {
 	protected $plugin_screen_hook_suffix = null;
 
 	/**
+	 * Keep plugin options here
+	 *
+	 * @since    1.0.0
+	 *
+	 * @var      array
+	 */
+	protected static $options = null;
+
+	/**
 	 * Initialize the plugin by setting localization, filters, and administration functions.
 	 *
 	 * @since     1.0.0
 	 */
 	private function __construct() {
+
+		// get options
+		self::$options = get_option('pixlikes_settings');
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
@@ -78,16 +90,11 @@ class PixLikesPlugin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Load public-facing style sheet and JavaScript.
-//		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		/// think about including this in add_like_box_after_content() so the script fille to be included only when is needed
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
 		// when the user is publishing a post let's ensure he is creating a default likes meta
 		add_action( 'publish_post', array( $this, 'init_meta_likes' ) );
-
-		// prepare the plugin settings page
-		add_filter( 'admin_init', array( $this, 'init_settings_page' ) );
 
 		// prepend the like box after the content
 		add_filter('the_content', array(&$this, 'add_like_box_after_content'));
@@ -157,7 +164,6 @@ class PixLikesPlugin {
 	 * Register and enqueue admin-specific style sheet.
 	 *
 	 * @since     1.0.0
-	 *
 	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_styles() {
@@ -177,7 +183,6 @@ class PixLikesPlugin {
 	 * Register and enqueue admin-specific JavaScript.
 	 *
 	 * @since     1.0.0
-	 *
 	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_scripts() {
@@ -199,7 +204,26 @@ class PixLikesPlugin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
+
+		$options = self::$options;
+
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'css/public.css', __FILE__ ), array(), $this->version );
+
+		$time = 1000;
+		if ( $options['like_action'] == 'hover' ) {
+			$time = $options['hover_time'];
+		}
+
+//		$custom_css = '.complete i {'.
+//			'animation: bounce '.$time.';'.
+//			'-webkit-animation: bounce '.$time.'; }';
+
+		$custom_css = '.animate i:after {'.
+			'-webkit-transition: all '.$time.'ms;'.
+			'-moz-transition: all '.$time.'ms;'.
+			'-o-transition: all '.$time.'ms;'.
+			'transition: all '.$time.'ms; }';
+		wp_add_inline_style($this->plugin_slug . '-plugin-styles', $custom_css );
 	}
 
 	/**
@@ -209,7 +233,7 @@ class PixLikesPlugin {
 	 */
 	public function enqueue_scripts() {
 
-		$options = $this->get_settings();
+		$options = self::$options;
 		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
 		$nonce = wp_create_nonce( 'pixlikes' );
 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'locals',
@@ -217,9 +241,10 @@ class PixLikesPlugin {
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'ajax_nounce' => $nonce,
 				'load_likes_with_ajax' => $options['load_likes_with_ajax'],
-				'already_voted_msg' => __("You already voted!"),
+				'already_voted_msg' => __("You already voted!", pixlikes::textdomain()),
 				'like_on_action' => $options['like_action'],
-				'hover_time' => $options['hover_time']
+				'hover_time' => $options['hover_time'],
+				'free_votes' => $options['free_votes']
 			)
 		);
 	}
@@ -230,8 +255,8 @@ class PixLikesPlugin {
 	public function add_plugin_admin_menu() {
 
 		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'PixLikes', $this->plugin_slug ),
-			__( 'PixLikes', $this->plugin_slug ),
+			__( 'PixLikes', pixlikes::textdomain() ),
+			__( 'PixLikes', pixlikes::textdomain() ),
 			'update_core',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
@@ -253,7 +278,7 @@ class PixLikesPlugin {
 
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'plugins.php?page=pixlikes' ) . '">' . __( 'Settings', $this->plugin_slug ) . '</a>'
+				'settings' => '<a href="' . admin_url( 'plugins.php?page=pixlikes' ) . '">' . __( 'Settings', pixlikes::textdomain() ) . '</a>'
 			),
 			$links
 		);
@@ -272,90 +297,6 @@ class PixLikesPlugin {
 		add_post_meta($post_id, '_pixlikes', '0', true );
 	}
 
-	/**
-	 * Register PixLikes Settings page
-	 */
-	public function init_settings_page() {
-
-		// register our settings under "pixlikes" group
-		register_setting( 'pixlikes', 'pixlikes_settings' );
-		add_settings_section( 'pixlikes', '', array(&$this, 'add_settings_section_header'), 'pixlikes' );
-
-		add_settings_field( 'show_on', __( 'Where to show the like button ? ', $this->plugin_slug ), array(&$this, 'setting_show_on'), 'pixlikes', 'pixlikes' );
-		add_settings_field( 'load_likes_with_ajax', __( 'Reload likes number on page load', $this->plugin_slug ), array(&$this, 'setting_load_likes_with_ajax'), 'pixlikes', 'pixlikes' );
-	}
-
-	/**
-	 * Create a presentation header.
-	 * This callback is required by add_settings_section() function.
-	 */
-	public function add_settings_section_header(){
-		echo '<h3>';
-		_e('Wasup, this is my presentation header and it is required');
-		echo '</h3>';
-	}
-
-	/*
-	 * Now we need to create a callback for each setting
-	 */
-	public function setting_show_on() {
-		$options = get_option( 'pixlikes_settings' );
-		if( !isset($options['show_on_post']) ) $options['show_on_post'] = '0';
-		if( !isset($options['show_on_page']) ) $options['show_on_page'] = '0';
-		if( !isset($options['show_on_home']) ) $options['show_on_home'] = '0';
-		if( !isset($options['show_on_archives']) ) $options['show_on_archives'] = '0';
-		// build in posts types
-		echo '<div><h3>'. __( 'Default Post Types', $this->plugin_slug ) .'</h3>';
-		echo '<fieldset>'.
-				'<input type="checkbox" name="pixlikes_settings[show_on_post]" value="'. (($options['show_on_post']) ? '1' : '0') .'"'. (($options['show_on_post']) ? ' checked="checked"' : '') .'/>'.
-				'<label for="pixlikes_settings[show_on_post]">post</label>'.
-			'</fieldset>';
-
-		echo '<fieldset>'.
-			'<input type="checkbox" name="pixlikes_settings[show_on_page]" value="'. (($options['show_on_page']) ? '1' : '0') .'"'. (($options['show_on_page']) ? ' checked="checked"' : '') .'/>'.
-			'<label for="pixlikes_settings[show_on_page]">page</label>'.
-			'</fieldset>';
-		echo '</div><div><h3>'.__( 'Custom Post Types', $this->plugin_slug ) .'</h3>';
-		// custom post types
-		$post_types = get_post_types( array(
-			'public'   => true,
-			'_builtin' => false
-		), 'names' );
-
-		foreach ( $post_types as $post_type ) {
-
-			$add_to_string = 'show_on_'.$post_type;
-			if( !isset($options[$add_to_string]) ) $options[$add_to_string] = '0';
-
-			echo '<fieldset>'.
-				'<input type="checkbox" name="pixlikes_settings['. $add_to_string .']" value="'. (($options[$add_to_string]) ? '1' : '0') .'"'. (($options[$add_to_string]) ? ' checked="checked"' : '') .'/>'.
-				'<label for="pixlikes_settings['. $add_to_string .']">'. $post_type .'</label>'.
-				'</fieldset>';
-		}
-
-		echo '</div><div><h3>'.__( 'Other places', $this->plugin_slug ) .'</h3>';
-
-		echo '<fieldset>'.
-			'<input type="checkbox" name="pixlikes_settings[show_on_home]" value="'. (($options['show_on_home']) ? '1' : '0') .'"'. (($options['show_on_home']) ? ' checked="checked"' : '') .'/>'.
-			'<label for="pixlikes_settings[show_on_home]">Home page</label>'.
-			'</fieldset>';
-
-		echo '<fieldset>'.
-			'<input type="checkbox" name="pixlikes_settings[show_on_archives]" value="'. (($options['show_on_archives']) ? '1' : '0') .'"'. (($options['show_on_archives']) ? ' checked="checked"' : '') .'/>'.
-			'<label for="pixlikes_settings[show_on_archives]">Archives like blog, categories, search page</label>'.
-			'</fieldset>';
-	}
-
-	public function setting_load_likes_with_ajax() {
-		$options = get_option( 'pixlikes_settings' );
-		if( !isset($options['load_likes_with_ajax']) ) $options['load_likes_with_ajax'] = '0';
-
-		echo '<div>';
-		echo '<fieldset>'.
-			'<input type="checkbox" name="pixlikes_settings[load_likes_with_ajax]" value="'. (($options['load_likes_with_ajax']) ? '1' : '0') .'"'. (($options['load_likes_with_ajax']) ? ' checked="checked"' : '') .'/>'.
-			'<label for="pixlikes_settings[load_likes_with_ajax]">This helps you to prevent the likes number to be cached </label>'.
-			'</fieldset></div>';
-	}
 
 	/**
 	 * Loading the likes box template.
@@ -380,10 +321,10 @@ class PixLikesPlugin {
 			extract($_vars);
 		}
 
-		if ( empty( $display_only) && !isset( $_COOKIE['pixlikes_'. get_the_ID()] ) ) {
-			$display_only = 'can_like';
+		if ( empty( $display_only ) && !$this->has_post_cookie( get_the_ID() ) ) {
+			$display_only = 'likeable';
 		} else {
-			$display_only = '';
+			$display_only = 'liked';
 		}
 		$data_id = 'data-id="'.get_the_ID().'"';
 		$likes_number = $this->get_likes_number(get_the_ID());
@@ -393,8 +334,8 @@ class PixLikesPlugin {
 		}
 
 		$title = '';
-		if( isset( $_COOKIE['pixlikes_'. get_the_ID()]) && $display_only == 'can_like' ) {
-			$title = __('You already voted!', 'wpGrade_txtd');
+		if( $this->has_post_cookie( get_the_ID() ) && $display_only == 'likeable' ) {
+			$title = __('You already voted!', pixlikes::textdomain());
 		}
 
 		// load it
@@ -410,7 +351,7 @@ class PixLikesPlugin {
 	 * @return   string     $content    The content and the like box if is needed
 	 */
 	public function add_like_box_after_content( $content ){
-		$options = $this->get_settings();
+		$options = self::$options;
 		// homepages
 		if ( ( is_front_page() || is_home() ) && $options['show_on_home'] == '1' ) return $content . $this->loadTemplate(array( 'display_only' => true ));
 		// archives
@@ -456,7 +397,7 @@ class PixLikesPlugin {
 		} elseif ( $_REQUEST['type'] == "increment" ) {
 
 			// if the user already voted return the curent likes number
-			if( isset($_COOKIE['pixlikes_'. $post_id]) ) {
+			if( $this->has_post_cookie( $post_id ) ) {
 				$result['likes_number'] = $likes_number;
 				$result['msg'] = 'You already voted!';
 				echo json_encode($result);
@@ -474,40 +415,10 @@ class PixLikesPlugin {
 	}
 
 	/*
-	 * Get all settings in one array but with values initialized
-	 *
-	 * @return   array      $content   All options, ones without values get initialized with string "0"
+	 * Display the like box
 	 */
-	public function get_settings(){
 
-		$options = get_option( 'pixlikes_settings' );
-		if( !isset($options['show_on_post']) ) $options['show_on_post'] = '0';
-		if( !isset($options['show_on_page']) ) $options['show_on_page'] = '0';
-		if( !isset($options['show_on_home']) ) $options['show_on_home'] = '0';
-		if( !isset($options['show_on_archives']) ) $options['show_on_archives'] = '0';
-		if( !isset($options['load_likes_with_ajax']) ) $options['load_likes_with_ajax'] = '0';
-
-		$post_types = get_post_types( array(
-			'public'   => true,
-			'_builtin' => false
-		), 'names' );
-
-		foreach ( $post_types as $post_type ) {
-			$add_to_string = 'show_on_'.$post_type;
-			if( !isset($options[$add_to_string]) ) $options[$add_to_string] = '0';
-		}
-
-		return $options;
-	}
-
-	/*
-	 * Display the like box unconditionally
-	 */
-//	public function display_pixlikes( $args = array('display_only' => false, 'class' => '' ) ) {
-//		echo $this->loadTemplate($args);
-//	}
-
-	public function display_likes_number( $args ) {
+	function display_likes_number( $args ) {
 		echo $this->loadTemplate( $args );
 	}
 
@@ -524,5 +435,18 @@ class PixLikesPlugin {
 		} else {
 			return 0;
 		}
+	}
+
+	/**
+	 * Check cookie for a post
+	 */
+	function has_post_cookie( $post_id ){
+		$options = self::$options;
+		if ( $options['free_votes'] ) {
+			return false;
+		} elseif ( isset( $_COOKIE['pixlikes_'.$post_id] ) ) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -3,7 +3,7 @@
 return array
 	(
 		'type' => 'postbox',
-		'label' => 'Cache Settings',
+		'label' => __('Cache Settings', pixlikes::textdomain() ),
 
 		// Custom field settings
 		// ---------------------
@@ -12,9 +12,9 @@ return array
 			(
 				'load_likes_with_ajax' => array
 					(
-						'label' => 'Reload likes number on page load',
+						'label' => __('Reload likes number on page load', pixlikes::textdomain() ),
 						'default' => false,
-						'description' > 'This helps you to prevent the likes number to be cached',
+						'description' > __('This helps you to prevent the likes number to be cached', pixlikes::textdomain() ),
 						'type' => 'switch',
 					),
 			)
