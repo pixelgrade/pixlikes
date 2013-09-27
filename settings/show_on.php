@@ -47,13 +47,13 @@ $settings =  array
 				'show_on_hompage' => array
 					(
 						'label' => 'Home page',
-						'default' => true,
+						'default' => false,
 						'type' => 'switch',
 					),
 				'show_on_archive' => array
 					(
 						'label' => 'Archives like blog, categories, search page',
-						'default' => true,
+						'default' => false,
 						'type' => 'switch',
 					),
 			),

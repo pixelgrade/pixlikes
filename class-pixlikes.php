@@ -24,7 +24,7 @@ class PixLikesPlugin {
 	 *
 	 * @const   string
 	 */
-	const VERSION = '1.0.0';
+
 	protected $version = '1.0.0';
 	/**
 	 * Unique identifier for your plugin.
@@ -353,9 +353,9 @@ class PixLikesPlugin {
 	public function add_like_box_after_content( $content ){
 		$options = self::$options;
 		// homepages
-		if ( ( is_front_page() || is_home() ) && $options['show_on_home'] == '1' ) return $content . $this->loadTemplate(array( 'display_only' => true ));
+		if ( ( is_front_page() || is_home() ) && $options['show_on_hompage'] == '1' ) return $content . $this->loadTemplate(array( 'display_only' => true ));
 		// archives
-		if ( ( is_archive() || is_search() ) && $options['show_on_archives'] == '1') return $content . $this->loadTemplate(array( 'display_only' => true ));
+		if ( ( is_archive() || is_search() ) && $options['show_on_archive'] == '1') return $content . $this->loadTemplate(array( 'display_only' => true ));
 		// singulars
 		if( is_singular('post') && $options['show_on_post'] == '1' ) return $content . $this->loadTemplate();
 		if( is_page() && !is_front_page() && $options['show_on_page'] == '1' ) return $content . $this->loadTemplate();
