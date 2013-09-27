@@ -278,7 +278,7 @@ class PixLikesPlugin {
 
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'plugins.php?page=pixlikes' ) . '">' . __( 'Settings', pixlikes::textdomain() ) . '</a>'
+				'settings' => '<a href="' . admin_url( 'options-general.php?page=pixlikes' ) . '">' . __( 'Settings', pixlikes::textdomain() ) . '</a>'
 			),
 			$links
 		);
