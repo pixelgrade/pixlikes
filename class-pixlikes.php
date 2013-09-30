@@ -363,9 +363,9 @@ class PixLikesPlugin {
 		$post_type = get_post_type();
 		if ( 'post' !== $post_type || 'page' !== $post_type ) {
 
-			if( is_singular($post_type) && $options['show_on_'.$post_type] == '1' ) return $content . $this->loadTemplate();
+			if( is_singular($post_type) && isset($options['show_on_'.$post_type]) && $options['show_on_'.$post_type] == '1' ) return $content . $this->loadTemplate();
 			// check also for a custom post type archive
-			if ( is_post_type_archive($post_type) && $options['show_on_'.$post_type] == '1' ) return $content . $this->loadTemplate(array( 'display_only' => true ));
+			if ( is_post_type_archive($post_type) && isset($options['show_on_'.$post_type]) && $options['show_on_'.$post_type] == '1' ) return $content . $this->loadTemplate(array( 'display_only' => true ));
 
 		}
 
