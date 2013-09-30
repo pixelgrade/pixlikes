@@ -8,16 +8,16 @@
  * @copyright 2013 Pixelgrade Media
  *
  * @wordpress-plugin
- * Plugin Name: PixLikes
- * Plugin URI:  http://pixelgrade.com
- * Description: Likes ajax sistem
- * Version:     1.0.0
- * Author:      pixelgrade
- * Author URI:  http://pixelgrade.com
- * Text Domain: pixlikes
- * License:     GPL-2.0+
- * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
- * Domain Path: /lang
+Plugin Name: PixLikes
+Plugin URI:  http://pixelgrade.com
+Description: Likes ajax sistem
+Version:     1.0.1
+Author:      pixelgrade
+Author URI:  http://pixelgrade.com
+Text Domain: pixlikes
+License:     GPL-2.0+
+License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+Domain Path: /lang
  */
 
 // If this file is called directly, abort.
