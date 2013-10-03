@@ -11,7 +11,7 @@
 Plugin Name: PixLikes
 Plugin URI:  http://pixelgrade.com
 Description: Likes ajax sistem
-Version:     1.0.1
+Version:     1.0.2
 Author:      pixelgrade
 Author URI:  http://pixelgrade.com
 Text Domain: pixlikes
