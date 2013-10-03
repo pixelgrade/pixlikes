@@ -456,15 +456,15 @@ class PixLikesPlugin {
 	/*
 	 * Return likes number
 	 * @param   $post_id
+	 * @return int likes number
 	 */
 
 	public function get_likes_number($post_id){
-
 		$curent_likes = get_post_meta( $post_id, '_pixlikes', true );
 		if ( !empty($curent_likes) ) {
-			return $curent_likes;
+			return intval($curent_likes);
 		} else {
-			return 0;
+			return intval(0);
 		}
 	}
 
