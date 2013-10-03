@@ -69,7 +69,7 @@
 			var post_id = $(likebox).data('id');
 			// if there is no post to like or the user already voted we should return
 			if ( typeof post_id === 'undefined' || ( !locals.free_votes && getCookie("pixlikes_"+post_id) ) ) return;
-			$(likebox).addClass('complete').removeClass('likeable animate');
+			$(likebox).addClass('complete liked').removeClass('likeable animate');
 			jQuery.ajax({
 				type: "post",url: locals.ajax_url,data: { action: 'pixlikes', _ajax_nonce: locals.ajax_nounce, type: 'increment', post_id: post_id},
 				//beforeSend: function() {jQuery("#loading").show("slow");}, //show loading just when link is clicked
@@ -82,6 +82,10 @@
 					}
 				}
 			});
+
+			setTimeout(function() {
+				$(likebox).removeClass('complete');
+			}, 2000);
 
 		};
 
