@@ -80,6 +80,11 @@ function display_pixlikes( $args = array('display_only' => false, 'class' => '' 
 	echo $pixlikes_plugin->display_likes_number($args);
 }
 
+function get_pixlikes( $postID ) {
+	global $pixlikes_plugin;
+	return $pixlikes_plugin->get_likes_number($postID);
+}
+
 /**
  * <style>
  * .animate-like {
