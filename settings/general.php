@@ -30,5 +30,10 @@
 					'default' => false,
 					'type' => 'switch'
 				),
+				'edit_votes'=>array(
+					'label' => 'Enable Edit Votes',
+					'default' => false,
+					'type' => 'switch',
+				)
 			)
 	); # config

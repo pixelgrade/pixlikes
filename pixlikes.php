@@ -11,7 +11,7 @@
 Plugin Name: PixLikes
 Plugin URI:  http://pixelgrade.com
 Description: Likes ajax sistem
-Version:     1.0.3
+Version:     1.0.4
 Author:      pixelgrade
 Author URI:  http://pixelgrade.com
 Text Domain: pixlikes
@@ -78,6 +78,11 @@ function pixlikes() {
 function display_pixlikes( $args = array('display_only' => false, 'class' => '' ) ) {
 	global $pixlikes_plugin;
 	echo $pixlikes_plugin->display_likes_number($args);
+}
+
+function get_pixlikes( $postID ) {
+	global $pixlikes_plugin;
+	return $pixlikes_plugin->get_likes_number($postID);
 }
 
 /**

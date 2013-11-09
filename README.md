@@ -4,7 +4,7 @@ Just another awesome WordPress Likes/Love system. Just what the world needed mor
 
 === # ===
 
-~Current Version:1.0.3~
+~Current Version:1.0.4~
 
 === # ===
 
