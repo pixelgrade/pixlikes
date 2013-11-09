@@ -31,7 +31,7 @@
 					'type' => 'switch'
 				),
 				'edit_votes'=>array(
-					'label' => 'Edit Votes',
+					'label' => 'Enable Edit Votes',
 					'default' => false,
 					'type' => 'switch',
 				)
