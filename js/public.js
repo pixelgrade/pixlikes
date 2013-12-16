@@ -27,8 +27,11 @@
 			}
 		});
 
-		if ( locals.like_on_action == 'click' ) {
+		$.support.touch = 'ontouchend' in document;
 
+		var touch = $.support.touch ? true : false;
+
+		if ( locals.like_on_action == 'click' || touch) {
 			/**
 			 * On each click check if the user can like
 			 */
@@ -41,7 +44,6 @@
 			});
 
 		} else if ( locals.like_on_action == 'hover' ) {
-
 			var delay_timer;
 
 			$(document).on('mouseenter', '.pixlikes-box.likeable .like-link', function(){
