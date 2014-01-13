@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pixelgrade/pixlikes.png?branch=development)](https://travis-ci.org/pixelgrade/pixlikes)
+
 === PixLikes ===
 
 Just another awesome WordPress Likes/Love system. Just what the world needed more :)
