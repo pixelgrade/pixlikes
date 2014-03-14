@@ -1,6 +1,11 @@
 <?php defined('ABSPATH') or die;
 
-	$basepath = dirname(__FILE__).DIRECTORY_SEPARATOR;
+$basepath = dirname(__FILE__).DIRECTORY_SEPARATOR;
+
+$debug = false;
+if ( isset( $_GET['debug'] ) && $_GET['debug'] == 'true' ) {
+	$debug = true;
+}
 
 return array
 	(
@@ -60,7 +65,22 @@ return array
 				'save_settings' => 'save_pixlikes_settings'
 			),
 
+		'github_updater' => array(
+			'slug' => 'pixlikes/pixlikes.php',
+			'api_url' => 'https://api.github.com/repos/pixelgrade/pixlikes',
+			'raw_url' => 'https://raw.github.com/pixelgrade/pixlikes/test-update',
+			'github_url' => 'https://github.com/pixelgrade/pixlikes/tree/test-update',
+			'zip_url' => 'https://github.com/pixelgrade/pixlikes/archive/test-update.zip',
+			'sslverify' => false,
+			'requires' => '3.0',
+			'tested' => '3.3',
+			'readme' => 'README.md',
+			'textdomain' => 'pixlikes',
+			'debug_mode' => true
+			//'access_token' => '',
+		),
+
 		// shows exception traces on error
-		'debug' => true,
+		'debug' => $debug,
 
 	); # config

@@ -70,10 +70,15 @@ class PixLikesPlugin {
 	 *
 	 * @since     1.0.0
 	 */
+
+	protected $config;
+
 	private function __construct() {
 
 		// get options
 		self::$options = get_option('pixlikes_settings');
+
+		$this->config = self::config();
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
@@ -129,6 +134,10 @@ class PixLikesPlugin {
 		return self::$instance;
 	}
 
+	public static function config(){
+		// @TODO maybe check this
+		return include 'plugin-config.php';
+	}
 
 	public function wpgrade_init_plugin(){
 //		$this->plugin_textdomain();
@@ -142,21 +151,10 @@ class PixLikesPlugin {
 	 */
 	public function github_plugin_updater_init() {
 		include_once 'updater.php';
-//        define( 'WP_GITHUB_FORCE_UPDATE', true ); // this is only for testing
+//		define( 'WP_GITHUB_FORCE_UPDATE', true ); // this is only for testing
 		if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
-			$config = array(
-				'slug' => 'pixlikes/pixlikes.php',
-				'api_url' => 'https://api.github.com/repos/pixelgrade/pixlikes',
-				'raw_url' => 'https://raw.github.com/pixelgrade/pixlikes/update',
-				'github_url' => 'https://github.com/pixelgrade/pixlikes/tree/update',
-				'zip_url' => 'https://github.com/pixelgrade/pixlikes/archive/update.zip',
-				'sslverify' => false,
-				'requires' => '3.0',
-				'tested' => '3.3',
-				'readme' => 'README.md',
-//			'access_token' => '',
-			);
-			new WP_Pixlikes_GitHub_Updater( $config );
+			$git_config = $this->config['github_updater'];
+			$this->github_updater = new WP_Pixlikes_GitHub_Updater( $git_config );
 		}
 	}
 
