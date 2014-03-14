@@ -68,15 +68,15 @@ return array
 		'github_updater' => array(
 			'slug' => 'pixlikes/pixlikes.php',
 			'api_url' => 'https://api.github.com/repos/pixelgrade/pixlikes',
-			'raw_url' => 'https://raw.github.com/pixelgrade/pixlikes/test-update',
-			'github_url' => 'https://github.com/pixelgrade/pixlikes/tree/test-update',
-			'zip_url' => 'https://github.com/pixelgrade/pixlikes/archive/test-update.zip',
+			'raw_url' => 'https://raw.github.com/pixelgrade/pixlikes/update',
+			'github_url' => 'https://github.com/pixelgrade/pixlikes/tree/update',
+			'zip_url' => 'https://github.com/pixelgrade/pixlikes/archive/update.zip',
 			'sslverify' => false,
 			'requires' => '3.0',
 			'tested' => '3.3',
 			'readme' => 'README.md',
 			'textdomain' => 'pixlikes',
-			'debug_mode' => true
+			'debug_mode' => $debug
 			//'access_token' => '',
 		),
 

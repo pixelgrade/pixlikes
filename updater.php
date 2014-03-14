@@ -236,11 +236,8 @@ class WP_Pixlikes_GitHub_Updater {
 					// to test a quick transient comment the above and uncomment the bellow
 					set_site_transient( $this->config['slug'].'_new_version', $version, 10 );
 				} else {
-//					set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
-
-					set_site_transient( $this->config['slug'].'_new_version', $version, 10 );
+					set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
 				}
-
 			}
 		}
 
@@ -292,7 +289,12 @@ class WP_Pixlikes_GitHub_Updater {
 				$github_data = json_decode( $github_data['body'] );
 
 				// refresh every 6 hours
-				set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6 );
+				// or refresh quick if we debug it
+				if ( isset ( $this->config['debug_mode'] ) && $this->config['debug_mode'] == 'true') {
+					set_site_transient( $this->config['slug'].'_github_data', $github_data, 10 );
+				} else {
+					set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6 );
+				}
 			}
 
 			// Store the data in this class instance for future calls
