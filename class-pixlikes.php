@@ -268,7 +268,7 @@ class PixLikesPlugin {
 	public function enqueue_scripts() {
 
 		$options = self::$options;
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
+		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery' ), $this->version, true );
 		$nonce = wp_create_nonce( 'pixlikes' );
 		wp_localize_script( $this->plugin_slug . '-plugin-script', 'locals',
 			array(
