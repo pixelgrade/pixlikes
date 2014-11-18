@@ -291,7 +291,7 @@ class PixLikesPlugin {
 		$this->plugin_screen_hook_suffix = add_options_page(
 			__( 'PixLikes', pixlikes::textdomain() ),
 			__( 'PixLikes', pixlikes::textdomain() ),
-			'update_core',
+			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
 		);
