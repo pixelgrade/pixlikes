@@ -1,17 +1,9 @@
 <?php
 /**
- *
- * @package   PixLikes
- * @author    Pixelgrade <contact@pixelgrade.com>
- * @license   GPL-2.0+
- * @link      http://pixelgrade.com
- * @copyright 2013 Pixelgrade Media
- *
- * @wordpress-plugin
 Plugin Name: PixLikes
 Plugin URI:  http://pixelgrade.com
 Description: Likes ajax sistem
-Version:     1.1.2
+Version:     1.1.3
 Author:      pixelgrade
 Author URI:  http://pixelgrade.com
 Text Domain: pixlikes
