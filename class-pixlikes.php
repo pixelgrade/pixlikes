@@ -142,7 +142,7 @@ class PixLikesPlugin {
 	public function wpgrade_init_plugin(){
 //		$this->plugin_textdomain();
 //		$this->add_wpgrade_shortcodes_button();
-		$this->github_plugin_updater_init();
+//		$this->github_plugin_updater_init();
 	}
 
 	/**
